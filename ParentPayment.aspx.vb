@@ -452,26 +452,26 @@ Partial Class ParentPayment
         Dim ShopCart As Cart = Session("Cart")
 
         If ShopCart.EightAdLineAmt > 0 Then
-            Dim Item As ListItem = New ListItem("1/8 Page Ad", ShopCart.EightAdLineAmt)
+            Dim Item As ListItem = New ListItem("1/8 Page Ad")
             rbadtype.Items.Add(Item)
         End If
 
         If ShopCart.QuarterAdLineAmt > 0 Then
-            Dim Item As ListItem = New ListItem("1/4 Page Ad", ShopCart.QuarterAdLineAmt)
+            Dim Item As ListItem = New ListItem("1/4 Page Ad")
             rbadtype.Items.Add(Item)
         End If
 
         If ShopCart.HalfAdLineAmt > 0 Then
-            Dim Item As ListItem = New ListItem("1/2 Page Ad", ShopCart.HalfAdLineAmt)
+            Dim Item As ListItem = New ListItem("1/2 Page Ad")
             rbadtype.Items.Add(Item)
         End If
 
         If ShopCart.FullAdLineAmt > 0 Then
-            Dim Item As ListItem = New ListItem("Full Page Ad", ShopCart.FullAdLineAmt)
+            Dim Item As ListItem = New ListItem("Full Page Ad")
             rbadtype.Items.Add(Item)
         End If
 
-
+        rbadtype.SelectedIndex = 0
 
 
 
