@@ -411,7 +411,6 @@ Student Last Name:<br>
    </div>
     <div style="padding-left: 20px; width: 1365px;">
      <asp:RadioButtonList ID="rbBookType" runat="server" Font-Bold="True" Font-Italic="False" Font-Size="9pt" AutoPostBack="True" Height="34px" Width="374px" RepeatColumns="1">
-            <asp:ListItem Selected="True">Standard Yearbook</asp:ListItem>
         </asp:RadioButtonList>
        
      QTY: <asp:TextBox ID="txtqty" runat="server" AutoPostBack="True"
@@ -587,8 +586,8 @@ Student Last Name:<br>
 			<div class="ResutoCol"><%# Eval("teacher")%>&nbsp;/&nbsp;<%#   Eval("grade")%></div>
 		</div> 
 		<div class="listcontaino">
-			<div class="infoCol">Text / Personalization Options:&nbsp;</div>
-			<div class="ResutoCol"><%# Eval("perstext1")%>&nbsp;/&nbsp;<span class="smalltext"><%# Eval("cap")%>,<%# Eval("cap1")%></span></div>
+			<div runat="server" id="PersOptions" class="infoCol">Text / Personalization Options:&nbsp;</div>
+			<div class="ResutoCol"><%# Eval("perstext1")%><br /><span class="smalltext"><%# Eval("cap")%>&nbsp;&nbsp;<%# Eval("cap1")%></span></div>
 		</div>
 		<div class="listcontaino">
 			<div class="deleteSelection"> <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" Text="Delete Item" /></div>
@@ -610,9 +609,9 @@ Student Last Name:<br>
 			<div class="infoCol">Teacher / Grade:&nbsp;</div>
 			<div class="ResutoCol"><%# Eval("teacher")%>&nbsp;/&nbsp;<%#   Eval("grade")%></div>
 		</div> 
-		<div class="listcontaino">
+		<div runat="server" id="PersOptions" class="listcontaino">
 			<div class="infoCol"> Text / Personalization Options:&nbsp;</div>
-			<div class="ResutoCol"><%# Eval("perstext1")%>&nbsp;/&nbsp;<span class="smalltext"><%# Eval("cap")%>,<%# Eval("cap1")%></span></div>
+			<div class="ResutoCol"><%# Eval("perstext1")%><br /><span class="smalltext"><%# Eval("cap")%>&nbsp;&nbsp;<%# Eval("cap1")%></span></div>
 		</div>
 		<div class="listcontaino">
 			<div class="deleteSelection"> <asp:Button ID="DeleteButton" runat="server" CommandName="Delete" Text="Delete Item" /></div>

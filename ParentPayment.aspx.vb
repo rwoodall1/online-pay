@@ -83,7 +83,7 @@ Partial Class ParentPayment
             ShopCart.OrderId = GetOrderId()
             Session.Add("orderid", ShopCart.OrderId)
             If ShopCart.basiconly = True Then
-
+                rbBookType.Items.Add("Standard Yearbook")
                 If ShopCart.LuvLine = True Then
                     luvline.Visible = True
                 Else
@@ -99,13 +99,15 @@ Partial Class ParentPayment
                     End If
 
                 Else
-                        Ad.Visible = False
+                    Ad.Visible = False
 
                 End If
 
 
             Else 'or personalized
-
+                If ShopCart.basicinvamt > 0 Then
+                    rbBookType.Items.Add("Standard Yearbook")
+                End If
                 If ShopCart.picpers = True Then 'hide dropdowns________________
 
                 End If
@@ -137,6 +139,10 @@ Partial Class ParentPayment
 
             End If
         End If
+        If Not IsPostBack Then
+            rbBookType.SelectedIndex = 0
+        End If
+
     End Sub
 	'Protected Sub UpdateDatabase()
 	'	Dim berror As Boolean = False
@@ -407,7 +413,7 @@ Partial Class ParentPayment
     'End Sub
     Protected Sub btnyearbook_Click(sender As Object, e As EventArgs) Handles btnyearbook.Click
 
-        
+
 
         If Page.IsValid Then
             If CheckForOrder() Then 'true is duplicate an order was found ask customer if it is a duplicate
@@ -814,11 +820,11 @@ cmd.connection.close()
 		cmd.Parameters.AddWithValue("@studentfname", studfname.Text.Trim)
 		cmd.Parameters.AddWithValue("@studentlname", studlname.Text.Trim)
 		cmd.Parameters.AddWithValue("@schcode", Session("schcode"))
-		'need to change year each year
-		cmd.CommandText = "Select orders.orderid,orders.studentfname,orders.studentlname,orders.orddate,payment.payerlname,payment.payerfname from orders" _
-		 & " inner join payment on orders.orderid=payment.orderid where orders.studentfname=@studentfname and " _
-		 & "orders.studentlname=@studentlname and orders.schcode=@schcode and orders.yr=15;"
-		Try
+        'need to change year each year
+        cmd.CommandText = "Select orders.orderid,orders.studentfname,orders.studentlname,orders.orddate,payment.payerlname,payment.payerfname from orders" _
+         & " inner join payment on orders.orderid=payment.orderid where orders.studentfname=@studentfname and " _
+         & "orders.studentlname=@studentlname and orders.schcode=@schcode and orders.yr=16;"
+        Try
 			cmd.Connection.Open()
 			reader = cmd.ExecuteReader
 
