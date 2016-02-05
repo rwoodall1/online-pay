@@ -78,9 +78,6 @@ and (max-device-width : 480px) {
 	.shoppingcart .row .column{float:left;width:60px;}
 }*/
 
-.style1 {
-	font-family: "Open Sans", Arial, sans-serif;
-}
 #pageZZ {
 	width: 90%;
 	max-width:900px;
@@ -407,19 +404,19 @@ Student Last Name:<br>
 <div class="col-md-6 formCont" >
    
    <div style="font-size: medium; font-weight: bold; height: 33px;">
-  Order Your Yearbook 
+       <asp:Label ID="lblOrderyrbook" runat="server" Text="Order Your Yearbook "></asp:Label>
    </div>
     <div style="padding-left: 20px; width: 1365px;">
      <asp:RadioButtonList ID="rbBookType" runat="server" Font-Bold="True" Font-Italic="False" Font-Size="9pt" AutoPostBack="True" Height="34px" Width="374px" RepeatColumns="1">
         </asp:RadioButtonList>
-       
+    <div runat="server" id="QtyDiv">   
      QTY: <asp:TextBox ID="txtqty" runat="server" AutoPostBack="True"
                     Width="32px" Height="26px" CausesValidation="True">1</asp:TextBox>
                 <asp:RequiredFieldValidator ID="RequiredFieldValidator22" runat="server" ControlToValidate="txtqty" Display="Dynamic" ErrorMessage="Qty Required" ValidationGroup="yb"></asp:RequiredFieldValidator>
  
   
         &nbsp;<asp:RangeValidator ID="RangeValidator1" runat="server" ControlToValidate="txtqty" Display="Dynamic" ErrorMessage="Qty Amount Not Available" MaximumValue="9" MinimumValue="1" ValidationGroup="yb"></asp:RangeValidator>
- 
+ </div>
   
         <br />
         <asp:Label ID="lblperpic" runat="server" Font-Bold="True" Font-Italic="True" Font-Size="Medium" ForeColor="#FF3300" Text="(Student portrait and name will appear on the Cover)" Visible="False" Width="535px"></asp:Label>
@@ -506,14 +503,14 @@ Student Last Name:<br>
             </ContentTemplate>
         </asp:UpdatePanel>    
 </div>
-
-        <asp:Button ID="btnyearbook" runat="server" Height="26px" Text="Add To Cart" Width="170px" OnClientClick="return Validate()" ValidationGroup="yb" />
-  
+<div runat="server" id="yrbookBtnDiv">
+        <asp:Button ID="btnyearbook" runat="server" Height="26px" Text="Add To Cart" Width="170px" onmouseup="showSpinner('imgyearbook')" OnClientClick="return Validate()" ValidationGroup="yb" />
+   <div id="imgyearbook" style="display:none;float:none"><asp:Image ID="Image2" runat="server" ImageUrl="~/Images/spiffygif_30x30.gif" Visible="True" /> <i>Adding to cart.</i></div>
         &nbsp;(click to add yearbook in cart)<br />
         <br />
         Repeat step after adding to cart if ordering yearbooks for multiple students.</div>
     </div>
-
+</div>
 <div class="col-md-12 formCont" id="luvline" runat="server" visible="false">
       <hr >
     <div style="font-size: medium; font-weight: bold; height: 29px;">
@@ -524,16 +521,18 @@ Student Last Name:<br>
     </div>
     &nbsp;<div style="padding-left: 20px">
           Love Line Text:<br />
-<asp:TextBox ID="txtluvline" runat="server" Width="459px" Height="54px" TextMode="MultiLine" MaxLength="200"></asp:TextBox>
-        &nbsp;<br /> (200 characters available) <asp:RequiredFieldValidator ID="RequiredFieldValidator21" runat="server" 
-          ControlToValidate="txtluvline" ErrorMessage="Enter Text" ForeColor="Red" Display="Dynamic" ValidationGroup="ll"></asp:RequiredFieldValidator>
+<asp:TextBox ID="txtluvline" runat="server" Width="459px" Height="54px" 
+              TextMode="MultiLine" MaxLength="199"></asp:TextBox>
+               &nbsp;<asp:RequiredFieldValidator ID="RequiredFieldValidator23" runat="server" ControlToValidate="txtluvline" Display="Dynamic" ErrorMessage="Enter Text For Love Line" Font-Bold="True" ValidationGroup="ll"></asp:RequiredFieldValidator>
+          <asp:CustomValidator ID="CustomValidator1" runat="server" ControlToValidate="txtluvline" Display="Dynamic" ErrorMessage="Max Characters Exceeded" ValidationGroup="11" Font-Bold="True"></asp:CustomValidator>
+        &nbsp;<br /> (200 characters available) 
         <br />
           (ex Love Line:Mya we are so proud of you! Good luck in Middle School! Love Mom and Dad)<br />
         <br />
         <div style="font-weight: bold">
         PLEASE CHECK YOUR GRAMMAR AND SPELLING, TEXT WILL BE PRINTED AS SUBMITTED.</div><br />
-        <asp:Button ID="btnluvline" runat="server" Height="26px" Text="Add To Cart" Width="164px" OnClientClick="return Validate()" ValidationGroup="ll" />
-        &nbsp;(click to add love line in cart)<br />
+         <asp:Button ID="btnluvline" runat="server" Height="26px" Text="Add To Cart" Width="164px" onmouseup="showSpinner('imgLuvLine1')" OnClientClick="return Validate()" ValidationGroup="ll" />
+        &nbsp;(click to add love line in cart)<div id="imgLuvLine1" style="display:none;float:none"><asp:Image ID="imgLuvLine" runat="server" ImageUrl="~/Images/spiffygif_30x30.gif" Visible="True" /> <i>Adding to cart.</i></div><br />
         <br />
         Repeat step after adding to cart if ordering love lines for multiple students.</div>
 </div>
@@ -548,7 +547,8 @@ Student Last Name:<br>
         <asp:Label ID="Label57" runat="server" Font-Bold="True" Font-Size="12pt" ForeColor="Red" Text="(You will be redirected to another site to create your ad after payment is made.)"></asp:Label>
         <br />
         <br />
-        &nbsp;<asp:Button ID="btnad" runat="server" Text="Add To Cart" Width="172px" OnClientClick="return Validate()" ValidationGroup="s3" />
+        &nbsp;<asp:Button ID="btnad" runat="server" Text="Add To Cart" Width="172px" onmouseup="showSpinner('imgad')" OnClientClick="return Validate()" ValidationGroup="s3" />
+        <div id="imgad" style="display:none;float:none"><asp:Image ID="Image3" runat="server" ImageUrl="~/Images/spiffygif_30x30.gif" Visible="True" /> <i>Adding to cart.</i></div>
         &nbsp;(click to place an ad in cart)<br />
         <br />
        
@@ -621,7 +621,7 @@ Student Last Name:<br>
         </ItemTemplate>
         <EmptyDataTemplate>
             <div runat="server" style="background-color: #fff;border-collapse: collapse;border-color: #999999;border-style:none;border-width:1px;">
-               No data was returned.
+            <strong>No items in the cart.</strong>
             </div>
         </EmptyDataTemplate>
         <LayoutTemplate>
@@ -653,9 +653,9 @@ Student Last Name:<br>
 <!--Listview Ends Here"-->
     <div class="col-md-11 formCont" align="right">
          <asp:HiddenField ID="hforderid" runat="server" />
-<asp:Button ID="Button2" runat="server" Text="Submit Payment" Width="119px" 
+<asp:Button ID="Button2" runat="server" onmouseup="showSpinner('submitbtn')" Text="Submit Payment" Width="119px" 
         style="height: 26px" UseSubmitBehavior="False" />
-
+        <div id="submitbtn" style="display:none;float:none"><asp:Image ID="Image4" runat="server" ImageUrl="~/Images/spiffygif_30x30.gif" Visible="True" /> <i>Contacting payment portal. Please be patient.</i></div>
     </div>
     
        
@@ -673,6 +673,15 @@ Student Last Name:<br>
             function ShowImage() {
                 document.getElementById('Image1').style.display = 'inherit';
                 document.getElementById('Label11').style.display = 'inherit';
+            }
+            function showSpinner(theSpinner) {
+              
+                //is valid
+                if (Page_ClientValidate("s1")) {
+                    document.getElementById(theSpinner).style.display = 'inherit';
+                }
+
+
             }
 </script>
 </div>

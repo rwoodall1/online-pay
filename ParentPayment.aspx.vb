@@ -107,6 +107,11 @@ Partial Class ParentPayment
             Else 'or personalized
                 If ShopCart.basicinvamt > 0 Then
                     rbBookType.Items.Add("Standard Yearbook")
+                Else
+                    lblOrderyrbook.Visible = False
+                    yrbookBtnDiv.Visible = False
+                    QtyDiv.Visible = False
+
                 End If
                 If ShopCart.picpers = True Then 'hide dropdowns________________
 
@@ -141,6 +146,7 @@ Partial Class ParentPayment
         End If
         If Not IsPostBack Then
             rbBookType.SelectedIndex = 0
+            rbBookType_SelectedIndexChanged(sender, e)
         End If
 
     End Sub
@@ -427,6 +433,7 @@ Partial Class ParentPayment
         End If
     End Sub
     Protected Sub btnluvline_Click(sender As Object, e As EventArgs) Handles btnluvline.Click
+        Page.Validate()
         If Page.IsValid Then
             If CheckForOrder() Then 'true is duplicate an order was found ask customer if it is a duplicate
                 Dim a As String = Session("duporder")
@@ -455,28 +462,47 @@ Partial Class ParentPayment
         End If
     End Sub
     Private Sub SetAdoptions()
+        'If less Then than 0 ads are For free, If 0 no add available.
         Dim ShopCart As Cart = Session("Cart")
-
-        If ShopCart.EightAdLineAmt > 0 Then
+        If ShopCart.EightAdLineAmt < 0 Then
+            ShopCart.EightAdLineAmt = 0
+            Dim Item As ListItem = New ListItem("1/8 Page Ad")
+            rbadtype.Items.Add(Item)
+        ElseIf ShopCart.EightAdLineAmt > 0 Then
             Dim Item As ListItem = New ListItem("1/8 Page Ad")
             rbadtype.Items.Add(Item)
         End If
 
-        If ShopCart.QuarterAdLineAmt > 0 Then
+        If ShopCart.QuarterAdLineAmt < 0 Then
+            ShopCart.QuarterAdLineAmt = 0
+            Dim Item As ListItem = New ListItem("1/4 Page Ad")
+            rbadtype.Items.Add(Item)
+        ElseIf ShopCart.QuarterAdLineAmt > 0 Then
             Dim Item As ListItem = New ListItem("1/4 Page Ad")
             rbadtype.Items.Add(Item)
         End If
 
-        If ShopCart.HalfAdLineAmt > 0 Then
+
+        If ShopCart.HalfAdLineAmt < 0 Then
+            ShopCart.HalfAdLineAmt = 0
+            Dim Item As ListItem = New ListItem("1/2 Page Ad")
+            rbadtype.Items.Add(Item)
+        ElseIf ShopCart.HalfAdLineAmt > 0 Then
             Dim Item As ListItem = New ListItem("1/2 Page Ad")
             rbadtype.Items.Add(Item)
         End If
 
-        If ShopCart.FullAdLineAmt > 0 Then
+        If ShopCart.FullAdLineAmt < 0 Then
+            ShopCart.FullAdLineAmt = 0
+            Dim Item As ListItem = New ListItem("Full Page Ad")
+            rbadtype.Items.Add(Item)
+        ElseIf ShopCart.FullAdLineAmt > 0 Then
             Dim Item As ListItem = New ListItem("Full Page Ad")
             rbadtype.Items.Add(Item)
         End If
 
+
+        Session("Cart") = ShopCart
         rbadtype.SelectedIndex = 0
 
 
@@ -584,8 +610,13 @@ Partial Class ParentPayment
         dsorders.InsertParameters.Add("@grade", ddlgrade.SelectedValue)
         dsorders.InsertParameters.Add("@booktype", item)
         dsorders.InsertParameters.Add("@teacher", teacher)
+        Dim vlength As Integer = txtluvline.Text.Length
+        Dim luvlinetext As String = txtluvline.Text
+
+        Dim vlength1 As Integer = txtperstext1.Text.Length
         If pitem = "luvline" Then 'lenghts of text are set in text boxes of the webpage
-            dsorders.InsertParameters.Add("@perstext1", txtluvline.Text)
+            dsorders.InsertParameters.Add("@perstext1", txtluvline.Text.Trim)
+
         ElseIf item = "Full Page Ad" Then
             dsorders.InsertParameters.Add("@perstext1", "")
         ElseIf item = "1/2 Page Ad" Then
@@ -595,7 +626,7 @@ Partial Class ParentPayment
         ElseIf item = "1/8 Page Ad" Then
             dsorders.InsertParameters.Add("@perstext1", "")
         Else
-            dsorders.InsertParameters.Add("@perstext1", txtperstext1.Text)
+            dsorders.InsertParameters.Add("@perstext1", txtperstext1.Text.Trim)
         End If
 
 
@@ -653,7 +684,7 @@ Partial Class ParentPayment
             mail.From = New MailAddress(ConfigurationManager.AppSettings("FromAddr"))
             mail.To.Add("randy@woodalldevelopment.com")
             'set the content
-            mail.Subject = "Mysql Error:Parent payment from " & lblschname.Text & "(" & ShopCart.schcode & ")"
+            mail.Subject = "Mysql Error:Temp Order Error" & lblschname.Text & "(" & ShopCart.schcode & ")"
             mail.Body = "An error occured inserting a tmporder record into the Mysql database server. The following data was not recorded in the payment table.<br/>" _
               & "School Name:" & lblschname.Text & "<br/>" _
               & "Student Name:" & studfname.Text & " " & studlname.Text & "<br/>" _
@@ -664,6 +695,8 @@ Partial Class ParentPayment
               & "Book Type:" & rbBookType.SelectedValue & "<br/>" _
               & "EmailAddress:" & txtcustemail.Text & "<br/>" _
               & "Perstext1:" & txtperstext1.Text & "<br/>" _
+               & "BadLuvlineText:" & luvlinetext & "<br/>" _
+              & "LuvLinetext Length" & vlength.ToString & "<br/>" _
              & "Item Amount:" & itemamount & "<br/>" _
               & "Item Total:" & (CInt(txtqty.Text) * CDec(itemamount)) & "<br/>" _
               & "Item Qty:" & txtqty.Text & "<br/>" _
@@ -1080,7 +1113,9 @@ cmd.Connection.Close()
                 perstext.Visible = False
                 icontext.Visible = False
                 icons.Visible = False
+                txtperstext1.Text = ""
                 lblperpic.Visible = False
+                txtluvline.Text = ""
                 ClearIcons()
                 Try
                     lbliconamt.Visible = False
@@ -1094,6 +1129,8 @@ cmd.Connection.Close()
                 lblperpic.Visible = False
                 txtqty.Text = "1"
                 txtperstext1.Text = ""
+                txtperstext1.Visible = True
+                txtluvline.Text = ""
                 ClearIcons()
             Case "Personalized Ink Yearbook"
 
@@ -1104,7 +1141,7 @@ cmd.Connection.Close()
                 lblperpic.Visible = False
                 txtqty.Text = "1"
                 txtperstext1.Text = ""
-
+                txtluvline.Text = ""
                 ClearIcons()
             Case "Personalized Foil Yearbook"
 
@@ -1125,7 +1162,7 @@ cmd.Connection.Close()
                 txtqty.Enabled = True
                 txtqty.Text = "1"
                 txtperstext1.Text = ""
-
+                txtluvline.Text = ""
                 ClearIcons()
 
 
@@ -1179,6 +1216,16 @@ cmd.Connection.Close()
 
     Protected Sub dsteacher_Selecting(sender As Object, e As SqlDataSourceSelectingEventArgs) Handles dsteacher.Selecting
 
+    End Sub
+
+    Protected Sub CustomValidator1_ServerValidate(source As Object, args As System.Web.UI.WebControls.ServerValidateEventArgs) Handles CustomValidator1.ServerValidate
+        Dim retval As Boolean = True
+        Dim vlength As Integer = txtluvline.Text.Length
+        If vlength > 200 Then
+            retval = False
+
+        End If
+        args.IsValid = retval
     End Sub
 End Class
 
